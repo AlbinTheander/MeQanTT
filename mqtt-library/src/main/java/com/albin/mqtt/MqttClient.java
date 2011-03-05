@@ -9,10 +9,10 @@ import java.util.concurrent.Semaphore;
 
 import com.albin.mqtt.message.ConnAckMessage;
 import com.albin.mqtt.message.ConnectMessage;
+import com.albin.mqtt.message.DisconnectMessage;
 import com.albin.mqtt.message.Message;
-import com.albin.mqtt.message.PublishMessage;
-import com.albin.mqtt.message.Message.Type;
 import com.albin.mqtt.message.MessageFactory;
+import com.albin.mqtt.message.PublishMessage;
 
 public class MqttClient {
 	
@@ -46,6 +46,8 @@ public class MqttClient {
 	}
 	
 	public void disconnect() throws IOException {
+		DisconnectMessage msg = new DisconnectMessage();
+		out.write(msg.toBytes());
 		socket.close();
 	}
 
