@@ -18,15 +18,16 @@ public class PublishMessage extends Message {
 		this(topic, FormatUtil.toMQttString(msg));
 	}
 	
-	public PublishMessage(Header header, InputStream in) throws IOException {
-		super(header, in);
-	}
-	
 	public PublishMessage(String topic, byte[] data) {
 		super(Type.PUBLISH);
 		this.topic = topic;
 		this.data = data;
 	}
+
+	public PublishMessage(Header header, InputStream in) throws IOException {
+		super(header, in);
+	}
+	
 	
 	@Override
 	protected int messageLength() {
