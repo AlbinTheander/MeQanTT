@@ -11,26 +11,25 @@ import com.albin.mqtt.message.ConnAckMessage;
 import com.albin.mqtt.message.ConnectMessage;
 import com.albin.mqtt.message.DisconnectMessage;
 import com.albin.mqtt.message.Message;
-import com.albin.mqtt.message.MessageFactory;
+import com.albin.mqtt.message.MessageInputStream;
 import com.albin.mqtt.message.PublishMessage;
 
 public class MqttClient {
 	
-	private MessageFactory factory;
-	private InputStream in;
+	private MessageInputStream in;
 	private Socket socket;
 	private OutputStream out;
 	private MqttReader reader;
 	private Semaphore connectionAckLock;
 	
 	public MqttClient() {
-		factory = new MessageFactory();
 	}
 	
 	
 	public void connect(String host, int port, String clientId) throws UnknownHostException, IOException, InterruptedException {
 		socket = new Socket(host, port);
-		in = socket.getInputStream();
+		InputStream is = socket.getInputStream();
+		in = new MessageInputStream(is);
 		out = socket.getOutputStream();
 		reader = new MqttReader();
 		reader.start();
@@ -79,7 +78,7 @@ public class MqttClient {
 		public void run() {
 			Message msg;
 			try {
-				msg = factory.read(in);
+				msg = in.readMessage();
 				handleMessage(msg);
 			} catch (IOException e) {
 			}

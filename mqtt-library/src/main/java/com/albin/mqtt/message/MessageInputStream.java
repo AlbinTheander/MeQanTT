@@ -1,13 +1,20 @@
 package com.albin.mqtt.message;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 
 import com.albin.mqtt.message.Message.Header;
 
-public class MessageFactory {
+public class MessageInputStream implements Closeable{
+	
+	private InputStream in;
+	
+	public MessageInputStream(InputStream in) {
+		this.in = in;
+	}
 
-	public Message read(InputStream in) throws IOException {
+	public Message readMessage() throws IOException {
 		byte flags = (byte) in.read();
 		Header header = new Header(flags);
 		switch (header.getType()) {
@@ -19,5 +26,9 @@ public class MessageFactory {
 			break;
 		}
 		return null;
+	}
+
+	public void close() throws IOException {
+		in.close();
 	}
 }
