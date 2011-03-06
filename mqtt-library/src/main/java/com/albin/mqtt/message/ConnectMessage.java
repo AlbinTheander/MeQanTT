@@ -91,5 +91,20 @@ public class ConnectMessage extends Message {
 		this.retainWill = retainWill;
 
 	}
+	
+	@Override
+	public void setDup(boolean dup) {
+		throw new UnsupportedOperationException("CONNECT messages don't use the DUP flag.");
+	}
+	
+	@Override
+	public void setRetained(boolean retain) {
+		throw new UnsupportedOperationException("CONNECT messages don't use the RETAIN flag.");
+	}
+	
+	@Override
+	public void setQos(QoS qos) {
+		throw new UnsupportedOperationException("CONNECT messages don't use the QoS flags.");
+	}
 
 }
