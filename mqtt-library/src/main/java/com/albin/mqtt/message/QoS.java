@@ -16,6 +16,6 @@ public enum QoS {
 			if (q.val == i)
 				return q;
 		}
-		return null;
+		throw new IllegalArgumentException("Not a valid QoS number: " + i);
 	}
 }
