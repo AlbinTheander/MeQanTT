@@ -71,6 +71,14 @@ public abstract class Message {
 			b |= dup ? 8 : 0;
 			return b;
 		}
+
+		@Override
+		public String toString() {
+			return "Header [type=" + type + ", retain=" + retain + ", qos="
+					+ qos + ", dup=" + dup + "]";
+		}
+
+		
 	}
 	
 	private static char nextId = 1;
