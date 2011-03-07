@@ -13,9 +13,9 @@ public class FormatUtil {
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i < bytes.length; i++) {
 			byte b = bytes[i];
-			int iVal = (b >= 0) ? b : (-b) | 0x80;
+			int iVal = b & 0xFF;
 			int byteN = Integer.parseInt(Integer.toBinaryString(iVal));
-			sb.append(String.format("%1$02d: %2$08d %3$1c %3$d\n" , i, byteN, b));
+			sb.append(String.format("%1$02d: %2$08d %3$1c %3$d\n" , i, byteN, iVal));
 		}
 		return sb.toString();
 	}
