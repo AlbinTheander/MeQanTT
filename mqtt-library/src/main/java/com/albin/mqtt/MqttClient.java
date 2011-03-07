@@ -12,13 +12,14 @@ import com.albin.mqtt.message.ConnectMessage;
 import com.albin.mqtt.message.DisconnectMessage;
 import com.albin.mqtt.message.Message;
 import com.albin.mqtt.message.MessageInputStream;
+import com.albin.mqtt.message.MessageOutputStream;
 import com.albin.mqtt.message.PublishMessage;
 
 public class MqttClient {
 	
 	private MessageInputStream in;
 	private Socket socket;
-	private OutputStream out;
+	private MessageOutputStream out;
 	private MqttReader reader;
 	private Semaphore connectionAckLock;
 	
@@ -30,23 +31,24 @@ public class MqttClient {
 		socket = new Socket(host, port);
 		InputStream is = socket.getInputStream();
 		in = new MessageInputStream(is);
-		out = socket.getOutputStream();
+		OutputStream os = socket.getOutputStream();
+		out = new MessageOutputStream(os);
 		reader = new MqttReader();
 		reader.start();
 		ConnectMessage msg = new ConnectMessage(clientId, false, 10);
 		connectionAckLock = new Semaphore(0);
-		out.write(msg.toBytes());
+		out.writeMessage(msg);
 		connectionAckLock.acquire();
 	}
 	
 	public void publish(String topic, String message) throws IOException {
 		PublishMessage msg = new PublishMessage(topic, message);
-		out.write(msg.toBytes());
+		out.writeMessage(msg.toBytes());
 	}
 	
 	public void disconnect() throws IOException {
 		DisconnectMessage msg = new DisconnectMessage();
-		out.write(msg.toBytes());
+		out.writeMessage(msg);
 		socket.close();
 	}
 
@@ -78,8 +80,10 @@ public class MqttClient {
 		public void run() {
 			Message msg;
 			try {
-				msg = in.readMessage();
-				handleMessage(msg);
+				while (true) {
+					msg = in.readMessage();
+					handleMessage(msg);
+				}
 			} catch (IOException e) {
 			}
 		}
