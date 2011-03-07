@@ -59,7 +59,6 @@ public class MqttClient {
 		socket.close();
 	}
 
-	
 	private void handleMessage(Message msg) {
 		if (msg == null) {
 			return;
@@ -81,7 +80,8 @@ public class MqttClient {
 	}
 
 	private void handleMessage(PublishMessage msg) {
-		
+		System.out.println("PUBLISH (" + msg.getTopic() + "): "
+				+ msg.getDataAsString());
 	}
 
 	private class MqttReader extends Thread {
