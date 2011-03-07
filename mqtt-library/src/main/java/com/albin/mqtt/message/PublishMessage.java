@@ -8,11 +8,10 @@ import java.io.OutputStream;
 
 import com.albin.mqtt.util.FormatUtil;
 
-public class PublishMessage extends Message {
+public class PublishMessage extends RetryableMessage {
 
 	private String topic;
 	private byte[] data;
-	private int messageId = -1;
 
 	public PublishMessage(String topic, String msg) {
 		this(topic, FormatUtil.toMQttString(msg));
@@ -39,9 +38,7 @@ public class PublishMessage extends Message {
 	
 	@Override
 	protected void writeMessage(OutputStream out) throws IOException {
-		if (messageId == -1) {
-			messageId = nextId();
-		}
+		int messageId = getMessageId();
 		DataOutputStream dos = new DataOutputStream(out);
 		dos.writeUTF(topic);
 		if (getQos() != QoS.AT_MOST_ONCE) {
@@ -59,7 +56,7 @@ public class PublishMessage extends Message {
 		topic = dis.readUTF();
 		pos += FormatUtil.toMQttString(topic).length;
 		if (getQos() != QoS.AT_MOST_ONCE) {
-			messageId = dis.readChar();
+			setMessageId(dis.readChar());
 			pos += 2;
 		}
 		data = new byte[msgLength - pos];
@@ -75,7 +72,7 @@ public class PublishMessage extends Message {
 	}
 	
 	public String getDataAsString() {
-		return FormatUtil.toString(data);
+		return new String(data);
 	}
 
 }

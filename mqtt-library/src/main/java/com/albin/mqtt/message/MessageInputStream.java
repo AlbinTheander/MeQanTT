@@ -22,6 +22,10 @@ public class MessageInputStream implements Closeable{
 			throw new UnsupportedOperationException("No support for deserializing CONNECT messages");
 		case CONNACK:
 			return new ConnAckMessage(header, in);
+		case PUBLISH:
+			return new PublishMessage(header, in);
+		case SUBACK:
+			return new SubAckMessage(header, in);
 		default:
 			break;
 		}
