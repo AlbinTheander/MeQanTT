@@ -12,7 +12,7 @@ public class MessageOutputStream {
 	}
 	
 	public void writeMessage(Message msg) throws IOException {
-		out.write(msg.toBytes());
+		msg.write(out);
 		out.flush();
 	}
 
