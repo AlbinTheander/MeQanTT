@@ -16,7 +16,7 @@ public class SubAckMessage extends RetryableMessage {
 	@Override
 	protected void readMessage(InputStream in, int msgLength)
 			throws IOException {
-		int msgId = in.read() *0xFF + in.read();
+		int msgId = in.read() * 0xFF + in.read();
 		setMessageId(msgId);
 		int pos = 2;
 		while (pos < msgLength) {

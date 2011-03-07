@@ -26,6 +26,8 @@ public class MessageInputStream implements Closeable{
 			return new PublishMessage(header, in);
 		case SUBACK:
 			return new SubAckMessage(header, in);
+		case UNSUBACK:
+			return new UnsubAckMessage(header, in);
 		default:
 			break;
 		}
