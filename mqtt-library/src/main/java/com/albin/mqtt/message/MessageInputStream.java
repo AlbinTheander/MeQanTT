@@ -25,6 +25,15 @@ public class MessageInputStream implements Closeable {
 		case PUBLISH:
 			msg = new PublishMessage(header);
 			break;
+		case PUBACK:
+			msg = new PubAckMessage(header);
+			break;
+		case PUBREC:
+			msg = new PubRecMessage(header);
+			break;
+		case PUBREL:
+			msg = new PubRelMessage(header);
+			break;
 		case SUBACK:
 			msg = new SubAckMessage(header);
 			break;
