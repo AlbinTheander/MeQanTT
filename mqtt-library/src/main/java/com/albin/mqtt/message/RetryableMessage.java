@@ -6,10 +6,10 @@ import java.io.OutputStream;
 
 public abstract class RetryableMessage extends Message {
 	
-	private int messageId = -1;
+	private int messageId;
 
-	public RetryableMessage(Header header, InputStream in) throws IOException {
-		super(header, in);
+	public RetryableMessage(Header header) throws IOException {
+		super(header);
 	}
 
 	public RetryableMessage(Type type) {

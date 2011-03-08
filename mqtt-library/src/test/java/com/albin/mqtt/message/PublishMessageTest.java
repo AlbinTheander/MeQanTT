@@ -43,6 +43,7 @@ public class PublishMessageTest {
 		assertEquals("Message", message);
 		
 		msg.setQos(QoS.EXACTLY_ONCE);
+		msg.setMessageId(1);
 		data = msg.toBytes();
 		dis = new DataInputStream(new ByteArrayInputStream(data));
 		// Read away 2-byte generic header

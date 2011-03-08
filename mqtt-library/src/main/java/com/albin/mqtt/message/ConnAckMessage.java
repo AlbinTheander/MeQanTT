@@ -20,8 +20,8 @@ public class ConnAckMessage extends Message {
 		super(Type.CONNACK);
 	}
 
-	public ConnAckMessage(Header header, InputStream in) throws IOException {
-		super(header, in);
+	public ConnAckMessage(Header header) throws IOException {
+		super(header);
 	}
 
 	@Override

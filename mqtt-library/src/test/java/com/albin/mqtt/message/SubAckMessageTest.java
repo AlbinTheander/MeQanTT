@@ -18,13 +18,14 @@ public class SubAckMessageTest {
 	public void isDeserializedCorrectly() throws IOException {
 		Header header = new Header((byte) 0x90);
 		InputStream in = new ByteArrayInputStream(new byte[] {5, 0, 5, 2, 0, 1});
-		SubAckMessage msg = new SubAckMessage(header, in);
+		SubAckMessage msg = new SubAckMessage(header);
+		msg.read(in);
 		assertEquals(5, msg.getMessageId());
 		List<QoS> qoses = msg.getGrantedQoSs();
 		assertEquals(3, qoses.size());
-		assertEquals(QoS.AT_LEAST_ONCE, qoses.get(0));
+		assertEquals(QoS.EXACTLY_ONCE, qoses.get(0));
 		assertEquals(QoS.AT_MOST_ONCE, qoses.get(1));
-		assertEquals(QoS.EXACTLY_ONCE, qoses.get(2));
+		assertEquals(QoS.AT_LEAST_ONCE, qoses.get(2));
 	}
 
 }

@@ -1,7 +1,6 @@
 package com.albin.mqtt.message;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 public class PubRecMessage extends RetryableMessage {
 
@@ -10,7 +9,7 @@ public class PubRecMessage extends RetryableMessage {
 		setMessageId(messageId);
 	}
 
-	public PubRecMessage(Header header, InputStream in) throws IOException {
-		super(header, in);
+	public PubRecMessage(Header header) throws IOException {
+		super(header);
 	}
 }

@@ -15,7 +15,8 @@ public class PingRespMessageTest {
 	public void isDeserializedCorrectly() throws IOException {
 		Header header = new Header((byte) 0xD0);
 		InputStream in = new ByteArrayInputStream(new byte[] {0});
-		new PingRespMessage(header, in);
+		PingRespMessage msg = new PingRespMessage(header);
+		msg.read(in);
 	}
 
 }

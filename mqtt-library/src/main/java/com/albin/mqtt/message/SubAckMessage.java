@@ -9,8 +9,8 @@ public class SubAckMessage extends RetryableMessage {
 	
 	private List<QoS> grantedQoSs;
 
-	public SubAckMessage(Header header, InputStream in) throws IOException {
-		super(header, in);
+	public SubAckMessage(Header header) throws IOException {
+		super(header);
 	}
 	
 	@Override

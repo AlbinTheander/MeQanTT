@@ -90,12 +90,11 @@ public abstract class Message {
 		header = new Header(type, false, QoS.AT_MOST_ONCE, false);
 	}
 	
-	public Message(Header header, InputStream in) throws IOException {
+	public Message(Header header) throws IOException {
 		this.header = header;
-		read(in);
 	}
 
-	public final void read(InputStream in) throws IOException {
+	final void read(InputStream in) throws IOException {
 		int msgLength = readMsgLength(in);
 		readMessage(in, msgLength);
 	}

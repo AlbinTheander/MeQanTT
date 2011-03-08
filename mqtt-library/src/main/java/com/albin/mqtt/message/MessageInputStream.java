@@ -17,22 +17,30 @@ public class MessageInputStream implements Closeable {
 	public Message readMessage() throws IOException {
 		byte flags = (byte) in.read();
 		Header header = new Header(flags);
+		Message msg = null;
 		switch (header.getType()) {
 		case CONNACK:
-			return new ConnAckMessage(header, in);
+			msg = new ConnAckMessage(header);
+			break;
 		case PUBLISH:
-			return new PublishMessage(header, in);
+			msg = new PublishMessage(header);
+			break;
 		case SUBACK:
-			return new SubAckMessage(header, in);
+			msg = new SubAckMessage(header);
+			break;
 		case UNSUBACK:
-			return new UnsubAckMessage(header, in);
+			msg = new UnsubAckMessage(header);
+			break;
 		case PINGRESP:
-			return new PingRespMessage(header, in);
+			msg = new PingRespMessage(header);
+			break;
 		default:
 			throw new UnsupportedOperationException(
 					"No support for deserializing " + header.getType()
 							+ " messages");
 		}
+		msg.read(in);
+		return msg;
 	}
 
 	public void close() throws IOException {

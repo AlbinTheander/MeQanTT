@@ -23,8 +23,8 @@ public class PublishMessage extends RetryableMessage {
 		this.data = data;
 	}
 
-	public PublishMessage(Header header, InputStream in) throws IOException {
-		super(header, in);
+	public PublishMessage(Header header) throws IOException {
+		super(header);
 	}
 	
 	
