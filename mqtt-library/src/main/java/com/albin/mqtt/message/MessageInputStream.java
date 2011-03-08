@@ -6,10 +6,10 @@ import java.io.InputStream;
 
 import com.albin.mqtt.message.Message.Header;
 
-public class MessageInputStream implements Closeable{
-	
+public class MessageInputStream implements Closeable {
+
 	private InputStream in;
-	
+
 	public MessageInputStream(InputStream in) {
 		this.in = in;
 	}
@@ -18,8 +18,6 @@ public class MessageInputStream implements Closeable{
 		byte flags = (byte) in.read();
 		Header header = new Header(flags);
 		switch (header.getType()) {
-		case CONNECT:
-			throw new UnsupportedOperationException("No support for deserializing CONNECT messages");
 		case CONNACK:
 			return new ConnAckMessage(header, in);
 		case PUBLISH:
@@ -28,10 +26,13 @@ public class MessageInputStream implements Closeable{
 			return new SubAckMessage(header, in);
 		case UNSUBACK:
 			return new UnsubAckMessage(header, in);
+		case PINGRESP:
+			return new PingRespMessage(header, in);
 		default:
-			break;
+			throw new UnsupportedOperationException(
+					"No support for deserializing " + header.getType()
+							+ " messages");
 		}
-		return null;
 	}
 
 	public void close() throws IOException {

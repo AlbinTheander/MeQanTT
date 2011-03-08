@@ -32,8 +32,8 @@ public class SubscribeMessage extends RetryableMessage {
 	
 	@Override
 	protected void writeMessage(OutputStream out) throws IOException {
+		super.writeMessage(out);
 		DataOutputStream dos = new DataOutputStream(out);
-		dos.writeChar(getMessageId());
 		for(int i = 0; i < topics.size(); i++) {
 			dos.writeUTF(topics.get(i));
 			dos.write(topicQoSs.get(i).val);

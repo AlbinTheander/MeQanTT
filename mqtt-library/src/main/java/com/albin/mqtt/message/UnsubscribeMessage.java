@@ -30,7 +30,7 @@ public class UnsubscribeMessage extends RetryableMessage {
 	@Override
 	protected void writeMessage(OutputStream out) throws IOException {
 		DataOutputStream dos = new DataOutputStream(out);
-		dos.writeChar(getMessageId());
+		super.writeMessage(dos);
 		for(String topic: topics) {
 			dos.writeUTF(topic);
 		}

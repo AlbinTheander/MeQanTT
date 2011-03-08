@@ -16,8 +16,7 @@ public class SubAckMessage extends RetryableMessage {
 	@Override
 	protected void readMessage(InputStream in, int msgLength)
 			throws IOException {
-		int msgId = in.read() * 0xFF + in.read();
-		setMessageId(msgId);
+		super.readMessage(in, msgLength);
 		int pos = 2;
 		while (pos < msgLength) {
 			QoS qos = QoS.valueOf(in.read());
@@ -31,6 +30,10 @@ public class SubAckMessage extends RetryableMessage {
 			grantedQoSs = new ArrayList<QoS>();
 		}
 		grantedQoSs.add(qos);
+	}
+	
+	public List<QoS> getGrantedQoSs() {
+		return grantedQoSs;
 	}
 	
 

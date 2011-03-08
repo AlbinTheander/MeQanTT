@@ -38,11 +38,11 @@ public class PublishMessage extends RetryableMessage {
 	
 	@Override
 	protected void writeMessage(OutputStream out) throws IOException {
-		int messageId = getMessageId();
 		DataOutputStream dos = new DataOutputStream(out);
 		dos.writeUTF(topic);
+		dos.flush();
 		if (getQos() != QoS.AT_MOST_ONCE) {
-			dos.writeChar(messageId);
+			super.writeMessage(out);
 		}
 		dos.write(data);
 		dos.flush();
@@ -56,7 +56,7 @@ public class PublishMessage extends RetryableMessage {
 		topic = dis.readUTF();
 		pos += FormatUtil.toMQttString(topic).length;
 		if (getQos() != QoS.AT_MOST_ONCE) {
-			setMessageId(dis.readChar());
+			super.readMessage(in, msgLength);
 			pos += 2;
 		}
 		data = new byte[msgLength - pos];
