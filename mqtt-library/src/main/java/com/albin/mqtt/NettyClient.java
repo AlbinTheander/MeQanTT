@@ -22,6 +22,11 @@ public class NettyClient {
 
 	private Channel channel;
 	private ClientBootstrap bootstrap;
+	private final String id;
+	
+	public NettyClient(String id) {
+		this.id = id;
+	}
 
 	public void connect() {
 		bootstrap = new ClientBootstrap(
@@ -50,7 +55,7 @@ public class NettyClient {
 			return;
 		}
 		
-		channel.write(new ConnectMessage("Albintest", true, 30));
+		channel.write(new ConnectMessage(id, true, 30));
 	}
 	
 	public void disconnect() {
