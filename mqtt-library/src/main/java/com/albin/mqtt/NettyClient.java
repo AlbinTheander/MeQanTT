@@ -13,6 +13,7 @@ import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
 import com.albin.mqtt.message.ConnectMessage;
 import com.albin.mqtt.message.DisconnectMessage;
+import com.albin.mqtt.message.PingReqMessage;
 import com.albin.mqtt.message.PublishMessage;
 import com.albin.mqtt.message.QoS;
 import com.albin.mqtt.message.SubscribeMessage;
@@ -56,6 +57,7 @@ public class NettyClient {
 		}
 		
 		channel.write(new ConnectMessage(id, true, 30));
+		// TODO: Should probably wait for the ConnAck message
 	}
 	
 	public void disconnect() {
@@ -74,6 +76,10 @@ public class NettyClient {
 	
 	public void publish(String topic, String msg) {
 		channel.write(new PublishMessage(topic, msg));
+	}
+	
+	public void ping() {
+		channel.write(new PingReqMessage());
 	}
 
 }
