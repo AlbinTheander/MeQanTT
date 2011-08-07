@@ -12,7 +12,8 @@ public class NettyMain {
 	private static String topic;
 
 	public static void main(String[] args) throws InterruptedException, IOException {
-		client = new NettyClient(args[0]);
+		String id = args.length == 0 ? "Dummy_"+System.currentTimeMillis() : args[0];
+		client = new NettyClient(id);
 		client.connect();
 		beInteractive();
 		client.disconnect();
