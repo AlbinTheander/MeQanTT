@@ -17,18 +17,20 @@ import com.albin.mqtt.message.PublishMessage;
 import com.albin.mqtt.message.QoS;
 import com.albin.mqtt.message.SubscribeMessage;
 
-public class MqttClient {
+public class SocketClient {
 
 	private MessageInputStream in;
 	private Socket socket;
 	private MessageOutputStream out;
 	private MqttReader reader;
 	private Semaphore connectionAckLock;
+	private final String id;
 
-	public MqttClient() {
+	public SocketClient(String id) {
+		this.id = id;
 	}
 
-	public void connect(String host, int port, String clientId)
+	public void connect(String host, int port)
 			throws UnknownHostException, IOException, InterruptedException {
 		socket = new Socket(host, port);
 		InputStream is = socket.getInputStream();
@@ -37,7 +39,7 @@ public class MqttClient {
 		out = new MessageOutputStream(os);
 		reader = new MqttReader();
 		reader.start();
-		ConnectMessage msg = new ConnectMessage(clientId, false, 60);
+		ConnectMessage msg = new ConnectMessage(id, false, 60);
 		connectionAckLock = new Semaphore(0);
 		out.writeMessage(msg);
 		connectionAckLock.acquire();

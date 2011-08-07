@@ -1,4 +1,4 @@
-package com.albin.mqtt;
+package com.albin.mqtt.netty;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;

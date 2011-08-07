@@ -18,36 +18,52 @@ import com.albin.mqtt.message.PublishMessage;
 import com.albin.mqtt.message.QoS;
 import com.albin.mqtt.message.SubscribeMessage;
 import com.albin.mqtt.message.UnsubscribeMessage;
+import com.albin.mqtt.netty.MqttMessageDecoder;
+import com.albin.mqtt.netty.MqttMessageEncoder;
+import com.albin.mqtt.netty.MqttMessageHandler;
 
 public class NettyClient {
 
 	private Channel channel;
 	private ClientBootstrap bootstrap;
 	private final String id;
-	
+	private MqttListener listener;
+	private MqttMessageHandler handler;
+
 	public NettyClient(String id) {
 		this.id = id;
 	}
+	
+	public void setListener(MqttListener listener) {
+		this.listener = listener;
+		if (handler != null) {
+			handler.setListener(listener);
+		}
+	}
 
-	public void connect() {
-		bootstrap = new ClientBootstrap(
-				new NioClientSocketChannelFactory(
-						Executors.newCachedThreadPool(),
-						Executors.newCachedThreadPool()));
+	/* (non-Javadoc)
+	 * @see com.albin.mqtt.MqttClient#connect(java.lang.String, int)
+	 */
+	public void connect(String host, int port) {
+		bootstrap = new ClientBootstrap(new NioClientSocketChannelFactory(
+				Executors.newCachedThreadPool(),
+				Executors.newCachedThreadPool()));
 
+		handler = new MqttMessageHandler();
+		handler.setListener(listener);
 		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
 
 			public ChannelPipeline getPipeline() throws Exception {
 				return Channels.pipeline(new MqttMessageEncoder(),
-						new MqttMessageDecoder(), new MqttMessageHandler());
+						new MqttMessageDecoder(), handler);
 			}
 		});
 
 		bootstrap.setOption("tcpNoDelay", true);
 		bootstrap.setOption("keepAlive", true);
 
-		ChannelFuture future = bootstrap.connect(new InetSocketAddress(
-				"localhost", 1883));
+		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host,
+				port));
 
 		channel = future.awaitUninterruptibly().getChannel();
 		if (!future.isSuccess()) {
@@ -55,29 +71,44 @@ public class NettyClient {
 			bootstrap.releaseExternalResources();
 			return;
 		}
-		
+
 		channel.write(new ConnectMessage(id, true, 30));
 		// TODO: Should probably wait for the ConnAck message
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see com.albin.mqtt.MqttClient#disconnect()
+	 */
 	public void disconnect() {
 		channel.write(new DisconnectMessage()).awaitUninterruptibly();
 		channel.close().awaitUninterruptibly();
 		bootstrap.releaseExternalResources();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.albin.mqtt.MqttClient#subscribe(java.lang.String)
+	 */
 	public void subscribe(String topic) {
 		channel.write(new SubscribeMessage(topic, QoS.AT_MOST_ONCE));
 	}
 
+	/* (non-Javadoc)
+	 * @see com.albin.mqtt.MqttClient#unsubscribe(java.lang.String)
+	 */
 	public void unsubscribe(String topic) {
 		channel.write(new UnsubscribeMessage(topic));
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see com.albin.mqtt.MqttClient#publish(java.lang.String, java.lang.String)
+	 */
 	public void publish(String topic, String msg) {
 		channel.write(new PublishMessage(topic, msg));
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see com.albin.mqtt.MqttClient#ping()
+	 */
 	public void ping() {
 		channel.write(new PingReqMessage());
 	}

@@ -1,4 +1,4 @@
-package com.albin.mqtt;
+package com.albin.mqtt.netty;
 
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
@@ -6,12 +6,15 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 
+import com.albin.mqtt.MqttListener;
 import com.albin.mqtt.message.ConnAckMessage;
 import com.albin.mqtt.message.Message;
 import com.albin.mqtt.message.PublishMessage;
 
 public class MqttMessageHandler extends SimpleChannelHandler {
 	
+	private MqttListener listener;
+
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e)
 			throws Exception {
@@ -23,7 +26,9 @@ public class MqttMessageHandler extends SimpleChannelHandler {
 	public void channelDisconnected(ChannelHandlerContext ctx,
 			ChannelStateEvent e) throws Exception {
 		super.channelDisconnected(ctx, e);
-		System.out.println("Disconnected!");
+		if (listener != null) {
+			listener.disconnected();
+		}
 	}
 	
 	@Override
@@ -49,12 +54,17 @@ public class MqttMessageHandler extends SimpleChannelHandler {
 	}
 
 	private void handleMessage(ConnAckMessage msg) {
-		System.out.println("Connected!");
+		// What to do here?
 	}
 
 	private void handleMessage(PublishMessage msg) {
-		System.out.println("PUBLISH (" + msg.getTopic() + "): "
-				+ msg.getDataAsString());
+		if (listener != null) {
+			listener.publishArrived(msg.getTopic(), msg.getData());
+		}
+	}
+
+	public void setListener(MqttListener listener) {
+		this.listener = listener;
 	}
 
 

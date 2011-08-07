@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import com.albin.mqtt.MqttListener;
 import com.albin.mqtt.NettyClient;
+import com.albin.mqtt.util.FormatUtil;
 
 public class NettyMain {
 	
@@ -14,7 +16,8 @@ public class NettyMain {
 	public static void main(String[] args) throws InterruptedException, IOException {
 		String id = args.length == 0 ? "Dummy_"+System.currentTimeMillis() : args[0];
 		client = new NettyClient(id);
-		client.connect();
+		client.setListener(new PrintingListener());
+		client.connect("localhost", 1883);
 		beInteractive();
 		client.disconnect();
 	}
@@ -47,6 +50,18 @@ public class NettyMain {
 
 	private static void publish(String msg) {
 		client.publish(topic, msg);
+	}
+	
+	private static class PrintingListener implements MqttListener {
+
+		public void disconnected() {
+			System.out.println("DISCONNECTED");
+		}
+
+		public void publishArrived(String topic, byte[] data) {
+			System.out.println("[" + topic + "]: " + FormatUtil.toString(data));
+		}
+		
 	}
 
 }
