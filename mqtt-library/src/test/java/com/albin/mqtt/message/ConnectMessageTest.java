@@ -15,12 +15,15 @@
  ******************************************************************************/
 package com.albin.mqtt.message;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Arrays;
 
 import org.junit.Test;
-
 
 public class ConnectMessageTest {
 
@@ -133,7 +136,7 @@ public class ConnectMessageTest {
 		assertEquals(0, flags & PASSWORD_MASK);
 		assertEquals(0, flags & USERNAME_MASK);
 	}
-	
+
 	@Test
 	public void usernameAndPasswordFlagsAreCorrect() {
 		ConnectMessage msg = new ConnectMessage("Test", false, 20);
@@ -164,6 +167,38 @@ public class ConnectMessageTest {
 		assertEquals(0, flags & WILL_RETAIN_MASK);
 		assertEquals(PASSWORD_MASK, flags & PASSWORD_MASK);
 		assertEquals(0, flags & USERNAME_MASK);
+	}
+
+	@Test
+	public void readWorks() throws IOException {
+		ConnectMessage msg = new ConnectMessage("test", true, 10000);
+		msg.setCredentials("username", "password");
+		msg.setWill("/will/topic", "this is will message", QoS.EXACTLY_ONCE,
+				true);
+		byte[] data = msg.toBytes();
+		MessageInputStream is = new MessageInputStream(
+				new ByteArrayInputStream(data));
+		ConnectMessage message = null;
+		try {
+			message = (ConnectMessage) is.readMessage();
+		} catch (Exception e) {
+			e.printStackTrace();
+			assertEquals(true, false);
+		}
+		assertEquals("MQIsdp", message.getProtocolId());
+		assertEquals(3, message.getProtocolVersion());
+		assertEquals(true, message.isUsernameFlag());
+		assertEquals(true, message.isPasswordFlag());
+		assertEquals(true, message.isRetainWill());
+		assertEquals(QoS.EXACTLY_ONCE, message.getWillQoS());
+		assertEquals(true, message.isWillFlag());
+		assertEquals(true, message.isCleanSession());
+		assertEquals(10000, message.getKeepAlive());
+		assertEquals("test", message.getClientId());
+		assertEquals("/will/topic",message.getWillTopic());
+		assertEquals("this is will message",message.getWill());
+		assertEquals("username",message.getUsername());
+		assertEquals("password",message.getPassword());
 	}
 
 }
