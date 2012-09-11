@@ -21,65 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.albin.mqtt.message.Message.Type;
 import com.albin.mqtt.util.FormatUtil;
 
 public class ConnectMessage extends Message {
-
-	public String getProtocolId() {
-		return protocolId;
-	}
-
-	public byte getProtocolVersion() {
-		return protocolVersion;
-	}
-
-	public String getClientId() {
-		return clientId;
-	}
-
-	public int getKeepAlive() {
-		return keepAlive;
-	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public boolean isCleanSession() {
-		return cleanSession;
-	}
-
-	public String getWillTopic() {
-		return willTopic;
-	}
-
-	public String getWill() {
-		return will;
-	}
-
-	public QoS getWillQoS() {
-		return willQoS;
-	}
-
-	public boolean isRetainWill() {
-		return retainWill;
-	}
-
-	public boolean isUsernameFlag() {
-		return usernameFlag;
-	}
-
-	public boolean isPasswordFlag() {
-		return passwordFlag;
-	}
-
-	public boolean isWillFlag() {
-		return willFlag;
-	}
 
 	private static int CONNECT_HEADER_SIZE = 12;
 
@@ -97,6 +42,10 @@ public class ConnectMessage extends Message {
 	private boolean usernameFlag;
 	private boolean passwordFlag;
 	private boolean willFlag;
+	
+	public ConnectMessage() {
+		super(Type.CONNECT);
+	}
 
 	public ConnectMessage(Header header) throws IOException {
 		super(header);
@@ -219,6 +168,62 @@ public class ConnectMessage extends Message {
 	public void setQos(QoS qos) {
 		throw new UnsupportedOperationException(
 				"CONNECT messages don't use the QoS flags.");
+	}
+	
+	public String getProtocolId() {
+		return protocolId;
+	}
+
+	public byte getProtocolVersion() {
+		return protocolVersion;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public int getKeepAlive() {
+		return keepAlive;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public boolean isCleanSession() {
+		return cleanSession;
+	}
+
+	public String getWillTopic() {
+		return willTopic;
+	}
+
+	public String getWill() {
+		return will;
+	}
+
+	public QoS getWillQoS() {
+		return willQoS;
+	}
+
+	public boolean isRetainWill() {
+		return retainWill;
+	}
+
+	public boolean isUsernameFlag() {
+		return usernameFlag;
+	}
+
+	public boolean isPasswordFlag() {
+		return passwordFlag;
+	}
+
+	public boolean isWillFlag() {
+		return willFlag;
 	}
 
 }
