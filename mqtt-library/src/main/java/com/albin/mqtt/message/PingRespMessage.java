@@ -22,4 +22,8 @@ public class PingRespMessage extends Message {
 	public PingRespMessage(Header header) throws IOException {
 		super(header);
 	}
+	
+	public PingRespMessage() {
+		super(Type.PINGRESP);
+	}
 }

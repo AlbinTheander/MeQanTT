@@ -15,8 +15,10 @@
  ******************************************************************************/
 package com.albin.mqtt.message;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +26,17 @@ import java.util.List;
 import com.albin.mqtt.util.FormatUtil;
 
 public class SubscribeMessage extends RetryableMessage {
-	
+
 	private List<String> topics = new ArrayList<String>();
 	private List<QoS> topicQoSs = new ArrayList<QoS>();
+
+	public SubscribeMessage() {
+		super(Type.SUBSCRIBE);
+	}
+
+	public SubscribeMessage(Header header) throws IOException {
+		super(header);
+	}
 
 	public SubscribeMessage(String topic, QoS topicQos) {
 		super(Type.SUBSCRIBE);
@@ -34,28 +44,46 @@ public class SubscribeMessage extends RetryableMessage {
 		topics.add(topic);
 		topicQoSs.add(topicQos);
 	}
-	
+
+	public void addTopic(String topic, QoS topicQos) {
+		topics.add(topic);
+		topicQoSs.add(topicQos);
+	}
+
 	@Override
 	protected int messageLength() {
 		int length = 2; // message id length
-		for(String topic: topics) {
+		for (String topic : topics) {
 			length += FormatUtil.toMQttString(topic).length;
 			length += 1; // topic QoS
 		}
 		return length;
 	}
-	
+
 	@Override
 	protected void writeMessage(OutputStream out) throws IOException {
 		super.writeMessage(out);
 		DataOutputStream dos = new DataOutputStream(out);
-		for(int i = 0; i < topics.size(); i++) {
+		for (int i = 0; i < topics.size(); i++) {
 			dos.writeUTF(topics.get(i));
 			dos.write(topicQoSs.get(i).val);
 		}
 		dos.flush();
 	}
-	
+
+	@Override
+	protected void readMessage(InputStream in, int msgLength)
+			throws IOException {
+		super.readMessage(in, msgLength);
+		DataInputStream dis = new DataInputStream(in);
+		int pos = 2;
+		while (pos < msgLength) {
+			topics.add(dis.readUTF());
+			pos += FormatUtil.toMQttString(topics.get(topics.size() - 1)).length;
+			topicQoSs.add(QoS.valueOf(dis.read() & 0x03));
+			pos++;
+		}
+	}
 
 	@Override
 	public void setQos(QoS qos) {
@@ -66,18 +94,28 @@ public class SubscribeMessage extends RetryableMessage {
 		}
 		super.setQos(qos);
 	}
-	
+
 	@Override
 	public void setDup(boolean dup) {
 		if (dup == true) {
-			throw new IllegalArgumentException("SUBSCRIBE can't set the DUP flag.");
+			throw new IllegalArgumentException(
+					"SUBSCRIBE can't set the DUP flag.");
 		}
 		super.setDup(dup);
 	}
-	
+
 	@Override
 	public void setRetained(boolean retain) {
-		throw new UnsupportedOperationException("SUBSCRIBE messages don't use the RETAIN flag");
+		throw new UnsupportedOperationException(
+				"SUBSCRIBE messages don't use the RETAIN flag");
+	}
+
+	public List<String> getTopics() {
+		return topics;
+	}
+
+	public List<QoS> getTopicQoSs() {
+		return topicQoSs;
 	}
 
 }

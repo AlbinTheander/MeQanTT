@@ -15,10 +15,16 @@
  ******************************************************************************/
 package com.albin.mqtt.message;
 
+import java.io.IOException;
+
 public class PingReqMessage extends Message {
 
 	public PingReqMessage() {
 		super(Type.PINGREQ);
+	}
+	
+	public PingReqMessage(Header header) throws IOException{
+		super(header);
 	}
 	
 	@Override

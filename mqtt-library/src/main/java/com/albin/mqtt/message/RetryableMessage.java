@@ -21,7 +21,7 @@ import java.io.OutputStream;
 
 public abstract class RetryableMessage extends Message {
 	
-	private int messageId;
+	protected int messageId;
 
 	public RetryableMessage(Header header) throws IOException {
 		super(header);
