@@ -29,11 +29,6 @@ public class SubAckMessage extends RetryableMessage {
 		super(Type.SUBACK);
 	}
 	
-	public SubAckMessage(int messageId){
-		super(Type.SUBACK);
-		this.messageId=messageId;
-	}
-
 	public SubAckMessage(Header header) throws IOException {
 		super(header);
 	}

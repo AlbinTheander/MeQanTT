@@ -64,6 +64,9 @@ public class MessageInputStream implements Closeable {
 		case CONNECT:
 			msg = new ConnectMessage(header);
 			break;
+		case SUBSCRIBE:
+			msg=new SubscribeMessage(header);
+			break;
 		default:
 			throw new UnsupportedOperationException(
 					"No support for deserializing " + header.getType()

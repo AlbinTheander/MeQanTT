@@ -45,14 +45,13 @@ public class SubAckMessageTest {
 	
 	@Test
 	public void isSerializedCorrectly() throws IOException{
-		SubAckMessage msg=new SubAckMessage(100);
+		SubAckMessage msg=new SubAckMessage();
 		msg.addQoS(QoS.AT_LEAST_ONCE);
 		msg.addQoS(QoS.AT_MOST_ONCE);
 		msg.addQoS(QoS.EXACTLY_ONCE);
 		byte[] data=msg.toBytes();
 		assertEquals(7,data.length);
 		assertEquals(5, msg.messageLength());
-		assertEquals(100,msg.getMessageId());
 		assertEquals(0x01, data[4]);
 		assertEquals(0x00, data[5]);
 		assertEquals(0x02, data[6]);
