@@ -187,11 +187,11 @@ public class ConnectMessageTest {
 		}
 		assertEquals("MQIsdp", message.getProtocolId());
 		assertEquals(3, message.getProtocolVersion());
-		assertEquals(true, message.isUsernameFlag());
-		assertEquals(true, message.isPasswordFlag());
-		assertEquals(true, message.isRetainWill());
+		assertEquals(true, message.hasUsername());
+		assertEquals(true, message.hasPassword());
+		assertEquals(true, message.isWillRetained());
 		assertEquals(QoS.EXACTLY_ONCE, message.getWillQoS());
-		assertEquals(true, message.isWillFlag());
+		assertEquals(true, message.hasWill());
 		assertEquals(true, message.isCleanSession());
 		assertEquals(10000, message.getKeepAlive());
 		assertEquals("test", message.getClientId());

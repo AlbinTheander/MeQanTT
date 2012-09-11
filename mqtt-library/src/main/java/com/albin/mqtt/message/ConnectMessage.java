@@ -38,9 +38,9 @@ public class ConnectMessage extends Message {
 	private String will;
 	private QoS willQoS = QoS.AT_MOST_ONCE;
 	private boolean retainWill = false;
-	private boolean usernameFlag;
-	private boolean passwordFlag;
-	private boolean willFlag;
+	private boolean hasUsername;
+	private boolean hasPassword;
+	private boolean hasWill;
 	
 	public ConnectMessage() {
 		super(Type.CONNECT);
@@ -79,22 +79,22 @@ public class ConnectMessage extends Message {
 		protocolId = dis.readUTF();
 		protocolVersion = dis.readByte();
 		byte cFlags = dis.readByte();
-		usernameFlag = (cFlags & 0x80) > 0;
-		passwordFlag = (cFlags & 0x40) > 0;
+		hasUsername = (cFlags & 0x80) > 0;
+		hasPassword = (cFlags & 0x40) > 0;
 		retainWill = (cFlags & 0x20) > 0;
 		willQoS = QoS.valueOf(cFlags >> 3 & 0x03);
-		willFlag = (cFlags & 0x04) > 0;
+		hasWill = (cFlags & 0x04) > 0;
 		cleanSession = (cFlags & 0x20) > 0;
 		keepAlive = dis.read() * 256 + dis.read();
 		clientId = dis.readUTF();
-		if (willFlag) {
+		if (hasWill) {
 			willTopic = dis.readUTF();
 			will = dis.readUTF();
 		}
-		if (usernameFlag) {
+		if (hasUsername) {
 			username = dis.readUTF();
 		}
-		if (passwordFlag) {
+		if (hasPassword) {
 			password = dis.readUTF();
 		}
 
@@ -106,23 +106,23 @@ public class ConnectMessage extends Message {
 		dos.writeUTF(protocolId);
 		dos.write(protocolVersion);
 		int flags = cleanSession ? 2 : 0;
-		flags |= willFlag ? 0x04 : 0;
+		flags |= hasWill ? 0x04 : 0;
 		flags |= willQoS.val << 3;
 		flags |= retainWill ? 0x20 : 0;
-		flags |= passwordFlag ? 0x40 : 0;
-		flags |= usernameFlag ? 0x80 : 0;
+		flags |= hasPassword ? 0x40 : 0;
+		flags |= hasUsername ? 0x80 : 0;
 		dos.write((byte) flags);
 		dos.writeChar(keepAlive);
 
 		dos.writeUTF(clientId);
-		if (willFlag) {
+		if (hasWill) {
 			dos.writeUTF(willTopic);
 			dos.writeUTF(will);
 		}
-		if (usernameFlag) {
+		if (hasUsername) {
 			dos.writeUTF(username);
 		}
-		if (passwordFlag) {
+		if (hasPassword) {
 			dos.writeUTF(password);
 		}
 		dos.flush();
@@ -131,15 +131,15 @@ public class ConnectMessage extends Message {
 	public void setCredentials(String username, String password) {
 		this.username = username;
 		this.password = password;
-		usernameFlag = this.username != null;
-		passwordFlag = this.password != null;
+		hasUsername = this.username != null;
+		hasPassword = this.password != null;
 	}
 
 	public void setWill(String willTopic, String will) {
 		this.willTopic = willTopic;
 		this.will = will;
 
-		willFlag = this.will != null;
+		hasWill = this.will != null;
 	}
 
 	public void setWill(String willTopic, String will, QoS willQoS,
@@ -148,7 +148,7 @@ public class ConnectMessage extends Message {
 		this.will = will;
 		this.willQoS = willQoS;
 		this.retainWill = retainWill;
-		willFlag = this.will != null;
+		hasWill = this.will != null;
 	}
 
 	@Override
@@ -209,20 +209,20 @@ public class ConnectMessage extends Message {
 		return willQoS;
 	}
 
-	public boolean isRetainWill() {
+	public boolean isWillRetained() {
 		return retainWill;
 	}
 
-	public boolean isUsernameFlag() {
-		return usernameFlag;
+	public boolean hasUsername() {
+		return hasUsername;
 	}
 
-	public boolean isPasswordFlag() {
-		return passwordFlag;
+	public boolean hasPassword() {
+		return hasPassword;
 	}
 
-	public boolean isWillFlag() {
-		return willFlag;
+	public boolean hasWill() {
+		return hasWill;
 	}
 
 }
