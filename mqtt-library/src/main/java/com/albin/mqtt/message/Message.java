@@ -135,14 +135,12 @@ public abstract class Message {
 	private void writeMsgLength(OutputStream out) throws IOException {
 		int msgLength = messageLength();
 		int val = msgLength;
-		int pos = 1;
 		do {
 			byte b = (byte) (val & 0x7F);
 			val >>= 7;
 			if (val > 0) {
 				b |= 0x80;
 			}
-			pos++;
 			out.write(b);
 		} while (val > 0);
 	}

@@ -61,6 +61,21 @@ public class MessageInputStream implements Closeable {
 		case PINGRESP:
 			msg = new PingRespMessage(header);
 			break;
+		case CONNECT:
+			msg = new ConnectMessage(header);
+			break;
+		case SUBSCRIBE:
+			msg=new SubscribeMessage(header);
+			break;
+		case UNSUBSCRIBE:
+			msg=new UnsubscribeMessage(header);
+			break;
+		case PINGREQ:
+			msg=new PingReqMessage(header);
+			break;
+		case DISCONNECT:
+			msg=new DisconnectMessage(header);
+			break;
 		default:
 			throw new UnsupportedOperationException(
 					"No support for deserializing " + header.getType()

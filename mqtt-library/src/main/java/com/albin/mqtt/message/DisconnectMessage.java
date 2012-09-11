@@ -15,10 +15,16 @@
  ******************************************************************************/
 package com.albin.mqtt.message;
 
+import java.io.IOException;
+
 public class DisconnectMessage extends Message {
 
 	public DisconnectMessage() {
 		super(Type.DISCONNECT);
+	}
+	
+	public DisconnectMessage(Header header) throws IOException{
+		super(header);
 	}
 	
 	@Override
