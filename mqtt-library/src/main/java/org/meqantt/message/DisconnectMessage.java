@@ -13,24 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.albin;
+package org.meqantt.message;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 
-import org.meqantt.SocketClient;
+public class DisconnectMessage extends Message {
 
-
-public class Main {
+	public DisconnectMessage() {
+		super(Type.DISCONNECT);
+	}
 	
-	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
-		SocketClient client = new SocketClient("Test");
-		client.connect("localhost", 1883);
-		Thread.sleep(3000);
-//		client.subscribe("$SYS/#");
-		Thread.sleep(1000);
-		Thread.sleep(30000);
-		client.disconnect();
+	public DisconnectMessage(Header header) throws IOException{
+		super(header);
+	}
+	
+	@Override
+	public void setDup(boolean dup) {
+		throw new UnsupportedOperationException("DISCONNECT message does not support the DUP flag");
+	}
+	
+	@Override
+	public void setQos(QoS qos) {
+		throw new UnsupportedOperationException("DISCONNECT message does not support the QoS flag");
+	}
+	
+	@Override
+	public void setRetained(boolean retain) {
+		throw new UnsupportedOperationException("DISCONNECT message does not support the RETAIN flag");
 	}
 
 }

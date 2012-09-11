@@ -13,24 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.albin;
+package org.meqantt.netty;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelHandler;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.handler.codec.oneone.OneToOneEncoder;
+import org.meqantt.message.Message;
 
-import org.meqantt.SocketClient;
 
+public class MqttMessageEncoder extends OneToOneEncoder implements
+		ChannelHandler {
 
-public class Main {
-	
-	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
-		SocketClient client = new SocketClient("Test");
-		client.connect("localhost", 1883);
-		Thread.sleep(3000);
-//		client.subscribe("$SYS/#");
-		Thread.sleep(1000);
-		Thread.sleep(30000);
-		client.disconnect();
+	@Override
+	protected Object encode(ChannelHandlerContext ctc, Channel channel,
+			Object msg) throws Exception {
+		if (!(msg instanceof Message)) {
+			return null;
+		}
+		byte[] data = ((Message) msg).toBytes();
+		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
+		buf.writeBytes(data); // data
+		return buf;
 	}
 
 }

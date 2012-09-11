@@ -13,24 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.albin;
+package org.meqantt.message;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.UnknownHostException;
 
-import org.meqantt.SocketClient;
+import org.junit.Test;
+import org.meqantt.util.FormatUtil;
 
 
-public class Main {
+public class ScratchTests {
 	
-	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
-		SocketClient client = new SocketClient("Test");
-		client.connect("localhost", 1883);
-		Thread.sleep(3000);
-//		client.subscribe("$SYS/#");
-		Thread.sleep(1000);
-		Thread.sleep(30000);
-		client.disconnect();
+	@Test
+	public void testStringCoding() throws IOException {
+		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(byteOut);
+		dos.writeUTF("Albin");
+		dos.flush();
+		byte[] data = byteOut.toByteArray();
+		System.out.println(FormatUtil.dumpByteArray(data));
 	}
 
 }

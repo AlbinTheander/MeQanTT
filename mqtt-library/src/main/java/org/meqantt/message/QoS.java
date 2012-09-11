@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.albin;
+package org.meqantt.message;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-
-import org.meqantt.SocketClient;
-
-
-public class Main {
+public enum QoS {
+	AT_MOST_ONCE  (0),
+	AT_LEAST_ONCE (1),
+	EXACTLY_ONCE  (2);
 	
-	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
-		SocketClient client = new SocketClient("Test");
-		client.connect("localhost", 1883);
-		Thread.sleep(3000);
-//		client.subscribe("$SYS/#");
-		Thread.sleep(1000);
-		Thread.sleep(30000);
-		client.disconnect();
+	final public int val;
+	
+	QoS(int val) {
+		this.val = val;
 	}
-
+	
+	static QoS valueOf(int i) {
+		for(QoS q: QoS.values()) {
+			if (q.val == i)
+				return q;
+		}
+		throw new IllegalArgumentException("Not a valid QoS number: " + i);
+	}
 }

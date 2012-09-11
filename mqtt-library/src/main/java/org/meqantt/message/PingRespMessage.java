@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.albin;
+package org.meqantt.message;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 
-import org.meqantt.SocketClient;
+public class PingRespMessage extends Message {
 
-
-public class Main {
-	
-	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
-		SocketClient client = new SocketClient("Test");
-		client.connect("localhost", 1883);
-		Thread.sleep(3000);
-//		client.subscribe("$SYS/#");
-		Thread.sleep(1000);
-		Thread.sleep(30000);
-		client.disconnect();
+	public PingRespMessage(Header header) throws IOException {
+		super(header);
 	}
-
+	
+	public PingRespMessage() {
+		super(Type.PINGRESP);
+	}
 }

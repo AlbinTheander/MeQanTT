@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package com.albin;
+package org.meqantt.message;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
+import java.io.OutputStream;
 
-import org.meqantt.SocketClient;
-
-
-public class Main {
+public class MessageOutputStream {
 	
-	public static void main(String[] args) throws UnknownHostException, IOException, InterruptedException {
-		SocketClient client = new SocketClient("Test");
-		client.connect("localhost", 1883);
-		Thread.sleep(3000);
-//		client.subscribe("$SYS/#");
-		Thread.sleep(1000);
-		Thread.sleep(30000);
-		client.disconnect();
+	private final OutputStream out;
+
+	public MessageOutputStream(OutputStream out) {
+		this.out = out;
+	}
+	
+	public void writeMessage(Message msg) throws IOException {
+		msg.write(out);
+		out.flush();
 	}
 
 }
