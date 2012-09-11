@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.albin.mqtt.message.Message.Type;
 import com.albin.mqtt.util.FormatUtil;
 
 public class ConnectMessage extends Message {
