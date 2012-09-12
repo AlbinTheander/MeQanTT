@@ -24,9 +24,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import org.junit.Test;
-import org.meqantt.message.ConnectMessage;
-import org.meqantt.message.MessageInputStream;
-import org.meqantt.message.QoS;
 
 public class ConnectMessageTest {
 
@@ -162,14 +159,6 @@ public class ConnectMessageTest {
 		assertEquals(PASSWORD_MASK, flags & PASSWORD_MASK);
 		assertEquals(USERNAME_MASK, flags & USERNAME_MASK);
 
-		msg.setCredentials(null, "password");
-		flags = msg.toBytes()[11];
-		assertEquals(0, flags & CLEAN_SESSION_MASK);
-		assertEquals(0, flags & WILL_MASK);
-		assertEquals(0, flags & WILL_QoS_MASK);
-		assertEquals(0, flags & WILL_RETAIN_MASK);
-		assertEquals(PASSWORD_MASK, flags & PASSWORD_MASK);
-		assertEquals(0, flags & USERNAME_MASK);
 	}
 
 	@Test
@@ -198,10 +187,22 @@ public class ConnectMessageTest {
 		assertEquals(true, message.isCleanSession());
 		assertEquals(10000, message.getKeepAlive());
 		assertEquals("test", message.getClientId());
-		assertEquals("/will/topic",message.getWillTopic());
-		assertEquals("this is will message",message.getWill());
-		assertEquals("username",message.getUsername());
-		assertEquals("password",message.getPassword());
+		assertEquals("/will/topic", message.getWillTopic());
+		assertEquals("this is will message", message.getWill());
+		assertEquals("username", message.getUsername());
+		assertEquals("password", message.getPassword());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void usernameIsNullButPasswordNot() {
+		ConnectMessage msg = new ConnectMessage("test", true, 10000);
+		msg.setCredentials(null, "123");
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void willTopisIsNullButWillNot() {
+		ConnectMessage msg = new ConnectMessage("test", true, 10000);
+		msg.setWill(null, "1111");
 	}
 
 }
