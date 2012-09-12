@@ -17,12 +17,12 @@ package org.meqantt.message;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.meqantt.util.FormatUtil;
-
 
 public class ConnectMessage extends Message {
 
@@ -37,12 +37,12 @@ public class ConnectMessage extends Message {
 	private boolean cleanSession;
 	private String willTopic;
 	private String will;
-	private QoS willQoS = QoS.AT_MOST_ONCE;
-	private boolean retainWill = false;
+	private QoS willQoS;
+	private boolean retainWill;
 	private boolean hasUsername;
 	private boolean hasPassword;
 	private boolean hasWill;
-	
+
 	public ConnectMessage() {
 		super(Type.CONNECT);
 	}
@@ -93,10 +93,18 @@ public class ConnectMessage extends Message {
 			will = dis.readUTF();
 		}
 		if (hasUsername) {
-			username = dis.readUTF();
+			try {
+				username = dis.readUTF();
+			} catch (EOFException e) {
+				// ignore
+			}
 		}
 		if (hasPassword) {
-			password = dis.readUTF();
+			try {
+				password = dis.readUTF();
+			} catch (EOFException e) {
+				// ignore
+			}
 		}
 
 	}
@@ -108,7 +116,7 @@ public class ConnectMessage extends Message {
 		dos.write(protocolVersion);
 		int flags = cleanSession ? 2 : 0;
 		flags |= hasWill ? 0x04 : 0;
-		flags |= willQoS.val << 3;
+		flags |= willQoS == null ? 0 : willQoS.val << 3;
 		flags |= retainWill ? 0x20 : 0;
 		flags |= hasPassword ? 0x40 : 0;
 		flags |= hasUsername ? 0x80 : 0;
@@ -129,27 +137,42 @@ public class ConnectMessage extends Message {
 		dos.flush();
 	}
 
+	public void setCredentials(String username) {
+		setCredentials(username, null);
+	}
+
 	public void setCredentials(String username, String password) {
+
+		if ((username == null || username.isEmpty())
+				&& (password != null && !password.isEmpty())) {
+			throw new IllegalArgumentException(
+					"It is not valid to supply a password without supplying a username.");
+		}
+
 		this.username = username;
 		this.password = password;
 		hasUsername = this.username != null;
 		hasPassword = this.password != null;
+
 	}
 
 	public void setWill(String willTopic, String will) {
-		this.willTopic = willTopic;
-		this.will = will;
-
-		hasWill = this.will != null;
+		setWill(willTopic, will, QoS.AT_MOST_ONCE, false);
 	}
 
 	public void setWill(String willTopic, String will, QoS willQoS,
 			boolean retainWill) {
+		if ((willTopic == null ^ will == null)
+				|| (will == null ^ willQoS == null)) {
+			throw new IllegalArgumentException(
+					"Can't set willTopic, will or willQoS value independently");
+		}
+
 		this.willTopic = willTopic;
 		this.will = will;
 		this.willQoS = willQoS;
 		this.retainWill = retainWill;
-		hasWill = this.will != null;
+		this.hasWill = willTopic != null;
 	}
 
 	@Override
@@ -169,7 +192,7 @@ public class ConnectMessage extends Message {
 		throw new UnsupportedOperationException(
 				"CONNECT messages don't use the QoS flags.");
 	}
-	
+
 	public String getProtocolId() {
 		return protocolId;
 	}
