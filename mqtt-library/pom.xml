@@ -4,7 +4,7 @@
 
 	<groupId>com.albin.mqtt</groupId>
 	<artifactId>mqtt-library</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<packaging>jar</packaging>
 
 	<name>MQanTT Library Project</name>
