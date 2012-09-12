@@ -17,6 +17,7 @@ package org.meqantt.message;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -92,10 +93,18 @@ public class ConnectMessage extends Message {
 			will = dis.readUTF();
 		}
 		if (hasUsername) {
-			username = dis.readUTF();
+			try {
+				username = dis.readUTF();
+			} catch (EOFException e) {
+				// ignore
+			}
 		}
 		if (hasPassword) {
-			password = dis.readUTF();
+			try {
+				password = dis.readUTF();
+			} catch (EOFException e) {
+				// ignore
+			}
 		}
 
 	}
