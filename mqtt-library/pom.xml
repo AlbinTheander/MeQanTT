@@ -24,6 +24,19 @@
 		</repository>
 	</repositories>
 
+	<distributionManagement>
+		<repository>
+			<id>Release</id>
+			<name>Release</name>
+			<url>http://10.103.13.34:8081/nexus/content/repositories/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>Snapshot</id>
+			<name>Snapshot</name>
+			<url>http://10.103.13.34:8081/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<build>
 		<plugins>
 			<plugin>
