@@ -1,22 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.albin.mqtt</groupId>
-  <artifactId>root</artifactId>
-  <version>0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>
+	<groupId>com.albin.mqtt</groupId>
+	<artifactId>meqantt-all</artifactId>
+	<version>0.1</version>
+	<packaging>pom</packaging>
 
-  <name>MQanTT Build Root</name>
-  <url>http://maven.apache.org</url>
+	<name>MeQanTT</name>
+	<url>https://github.com/AlbinTheander/MeQanTT</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+		</license>
+	</licenses>
 
-  <modules>
-    <module>mqtt-library</module>
-    <module>netty-test-client</module>
-  </modules>
+	<scm>
+		<url>https://github.com/AlbinTheander/MeQanTT</url>
+		<connection>scm:git:git://github.com/AlbinTheander/MeQanTT.git</connection>
+		<developerConnection>scm:git:git://github.com/AlbinTheander/MeQanTT.git</developerConnection>
+	</scm>
+
+	<developers>
+		<developer>
+			<id>AlbinTheander</id>
+			<name>AlbinTheander</name>
+		</developer>
+	</developers>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<modules>
+		<module>mqtt-library</module>
+		<module>netty-test-client</module>
+	</modules>
+	
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.8.2</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.netty</groupId>
+				<artifactId>netty</artifactId>
+				<version>3.2.4.Final</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
 </project>

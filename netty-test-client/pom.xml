@@ -4,18 +4,18 @@
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>root</artifactId>
 		<groupId>com.albin.mqtt</groupId>
-		<version>0.1-SNAPSHOT</version>
+		<artifactId>meqantt-all</artifactId>
+		<version>0.1</version>
 	</parent>
 	<groupId>com.albin.mqtt</groupId>
 	<artifactId>netty-test-client</artifactId>
-	<version>0.1-SNAPSHOT</version>
-	<name>Demo client</name>
-	<url>http://maven.apache.org</url>
+	<name>MeQanTT Demo Client</name>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -61,7 +61,7 @@
 		<dependency>
 			<groupId>com.albin.mqtt</groupId>
 			<artifactId>mqtt-library</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<version>0.1</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>

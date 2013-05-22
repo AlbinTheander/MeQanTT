@@ -2,40 +2,20 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<groupId>com.albin.mqtt</groupId>
+		<artifactId>meqantt-all</artifactId>
+		<version>0.1</version>
+	</parent>
 	<groupId>com.albin.mqtt</groupId>
 	<artifactId>mqtt-library</artifactId>
-	<version>0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>MQanTT Library Project</name>
-	<url>http://maven.apache.org</url>
+	<name>MeQanTT Library Project</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
-	<repositories>
-		<repository>
-			<id>repository.jboss.org</id>
-			<url>http://repository.jboss.org/nexus/content/groups/public/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<distributionManagement>
-		<repository>
-			<id>Release</id>
-			<name>Release</name>
-			<url>http://10.103.13.34:8081/nexus/content/repositories/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>Snapshot</id>
-			<name>Snapshot</name>
-			<url>http://10.103.13.34:8081/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 	<build>
 		<plugins>
@@ -47,23 +27,20 @@
 					<source>1.5</source>
 					<target>1.5</target>
 				</configuration>
-
 			</plugin>
 		</plugins>
 	</build>
+	
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.8.2</version>
 			<type>jar</type>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.netty</groupId>
 			<artifactId>netty</artifactId>
-			<version>3.2.4.Final</version>
-			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 </project>
